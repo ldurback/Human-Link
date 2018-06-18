@@ -1,3 +1,9 @@
+// load the Log library
+var Log = require('log')
+
+// set logging level
+var log = new Log('info');
+
 // load the TCP Library
 var net = require('net');
 
@@ -12,14 +18,14 @@ var server = net.createServer(function(socket) {
 
 	// define the error handler for the socket
 	socket.on("error", function (error) {
-		console.log("Error with socket " + socket.name + ": " + error);
+		log.error(socket.name + ": " + error);
 	});
 
 	// send welcome message
 	socket.write("You are connected as " + socket.name + "\n");
 
 	// log that client has joined
-	console.log(socket.name + " has joined");
+	log.info(socket.name + " has joined");
 
 	// put the socket in the list of clients
 	clients.push(socket);
@@ -29,10 +35,10 @@ var server = net.createServer(function(socket) {
 		clients.splice(clients.indexOf(socket),1);
 
 		//log that the client has left
-		console.log(socket.name + " has left");
+		log.info(socket.name + " has left");
 	});
 });
 
 server.listen(5000);
 
-console.log("Live Server on port 5000");
+log.info("Live Server on port 5000");

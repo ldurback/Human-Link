@@ -1,3 +1,9 @@
+// load the Log library
+var Log = require('log')
+
+// set logging level
+var log = new Log('info');
+
 // load the TCP library
 var net = require('net');
 
@@ -6,19 +12,19 @@ var clientSocket = new net.Socket();
 
 // define error handler
 clientSocket.on("error", function(error) {
-    console.log("Error: " + error);
+    log.error(error);
 });
 
 // connect clientSocket to server
 clientSocket.connect(5000, "localhost", function() {
-    console.log("Connected");
+    log.info("Connected");
 });
 
 clientSocket.on("data", function(data) {
-    console.log("Received: " + data);
+    log.info("Received: " + data);
 });
 
 clientSocket.on("close", function () {
-    console.log("Server connection closed")
+    log.info("Server connection closed")
 });
 
