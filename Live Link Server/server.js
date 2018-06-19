@@ -1,6 +1,5 @@
 // load the Log library
 var Log = require('log')
-
 // set logging level
 var log = new Log('info');
 
@@ -32,7 +31,7 @@ var server = net.createServer(function(socket) {
 
 	// parse data that the server receives from the client
 	socket.on("data", function(data) {
-		
+
 	});
 
 	// remove the client from the list when it leaves
