@@ -8,17 +8,19 @@ var log = new Log('info');
 var net = require('net');
 
 // create a client socket to connect to server
-var clientSocket = new net.Socket();
+clientSocket = new net.Socket();
 
 // define error handler
 clientSocket.on("error", function(error) {
     log.error(error);
 });
 
-// connect clientSocket to server
-clientSocket.connect(5000, "localhost", function() {
-    log.info("Connected");
-});
+exports.setup = function(port, server) {
+    // connect clientSocket to server
+    clientSocket.connect(port, server, function() {
+        log.info("Connected");
+    });
+}
 
 clientSocket.on("data", function(data) {
     log.info("Received: " + data);
@@ -27,4 +29,3 @@ clientSocket.on("data", function(data) {
 clientSocket.on("close", function () {
     log.info("Server connection closed")
 });
-

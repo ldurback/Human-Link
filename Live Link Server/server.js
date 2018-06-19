@@ -16,6 +16,9 @@ var server = net.createServer(function(socket) {
 	// Give a name to the client
 	socket.name = socket.remoteAddress + ":" + socket.remotePort;
 
+	// put the socket in the list of clients
+	clients.push(socket);
+
 	// define the error handler for the socket
 	socket.on("error", function (error) {
 		log.error(socket.name + ": " + error);
@@ -27,14 +30,15 @@ var server = net.createServer(function(socket) {
 	// log that client has joined
 	log.info(socket.name + " has joined");
 
-	// put the socket in the list of clients
-	clients.push(socket);
+	// parse data that the server receives from the client
+	socket.on("data", function(data) {
+		
+	});
 
 	// remove the client from the list when it leaves
-	socket.on('end', function() {
+	socket.on("close", function() {
 		clients.splice(clients.indexOf(socket),1);
 
-		//log that the client has left
 		log.info(socket.name + " has left");
 	});
 });
