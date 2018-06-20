@@ -4,9 +4,11 @@ var Log = require('log')
 var log = new Log('info');
 
 // load the ui
-var ui = require('./ui/ui');
+var UI = require('./ui');
 ui.setup();
 
 // create a client socket to connect to server
-var client = require('./client/client')
-client.setup(5000, "localhost");
+var Client = require('./client')
+var client = new Client();
+
+client.connect(5000, "localhost");
