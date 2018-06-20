@@ -9,23 +9,23 @@ class UI {
     constructor() {
         // create http server for UI
         this.app = require('express')();
-        this.http = require('http').Server(uiApp);
+        this.http = require('http').Server(this.app);
 
         // create socket for communication with ui
-        this.io = require('socket.io')(uiHttp);
+        this.io = require('socket.io')(this.http);
 
-        this.pp.get('/', function(req, res){
+        this.app.get('/', function(req, res){
             res.sendFile(__dirname + '/ui/index.html');
         });
 
-        this.io.on('connection', function(socket){
+        this.io.on('connection', (socket) => {
             log.info('a user connected');
             socket.on('disconnect', function(){
                 log.info('user disconnected');
             });
         });
 
-        this.http.listen(0, function() {
+        this.http.listen(0, () => {
             log.info('UI server on port ' + this.http.address().port);
         });
     }

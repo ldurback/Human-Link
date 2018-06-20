@@ -5,9 +5,9 @@ var log = new Log('info');
 
 // load the ui
 var UI = require('./ui');
-ui.setup();
+var ui = new UI();
 
-// create a client socket to connect to server
+// create a client to connect to a server
 var Client = require('./client')
 var client = new Client();
 
