@@ -1,7 +1,7 @@
 var Log = require('log')
 var log = new Log('info');
 
-class UI {
+class UIHost {
     constructor(controller) {
         this.app = require('express')();
         this.http = require('http').Server(this.app);
@@ -43,4 +43,4 @@ class UI {
     }
 }
 
-module.exports = UI;
+module.exports = UIHost;

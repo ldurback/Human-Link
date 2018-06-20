@@ -1,13 +1,13 @@
 var Log = require('log')
 var log = new Log('info');
 
-var UI = require('./ui');
+var UIHost = require('./uihost');
 
 var LiveServerConnection = require('./liveServerConnection');
 
 class Controller {
     constructor() {
-        this.ui = new UI(this);
+        this.uiHost = new UIHost(this);
 
         this.liveServerConnections = [];
     }
