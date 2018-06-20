@@ -3,10 +3,33 @@
   <head>
     <title>Human Organizer UI</title>
     <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
     <script>
         var socket = io();
     </script>
   </head>
   <body>
+    <div>
+      <h1>Connect to Live Server</h1>
+        Server <input id="server" autocomplete="off" /> <br />
+        Port <input id="port" autocomplete="off" /> <br />
+        <button id="connect">Connect</button>
+      </form>
+    </div>
+
+    <script>
+      $('#connect').click(() => {
+        var data = {
+          server: $('#server').val().toString(),
+          port: parseInt($('#port').val().toString(),10)
+        };
+
+        console.log("sending message to connect to live server @" + data.server + ":" + data.port);
+
+        socket.emit('connect_to_live_server', data);
+
+        return false;
+      });
+    </script>
   </body>
 </html>
