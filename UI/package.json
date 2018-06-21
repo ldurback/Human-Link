@@ -1,0 +1,13 @@
+{
+  "name": "human-link-client-ui",
+  "version": "0.0.1",
+  "description": "Human Link Client UI",
+  "dependencies": {
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1"
+  },
+  "devDependencies": {
+    "@types/react": "^16.4.1",
+    "@types/react-dom": "^16.0.6"
+  }
+}

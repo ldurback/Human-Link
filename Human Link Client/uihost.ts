@@ -54,9 +54,6 @@ export = class UIHost {
 
     serve(directory_address) {
         this.app.use(express.static(directory_address));
-    //    this.app.get('/', function(req, res){
-    //        res.sendFile(__dirname + file_address);
-    //    });
     }
 
     find_port_and_listen() {
