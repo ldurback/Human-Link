@@ -5,6 +5,13 @@ import socket_io from "socket.io";
 import Controller from "./controller";
 import { AddressInfo } from "net";
 
+import { Socket } from "socket.io";
+
+interface LiveLinkServerAddress {
+    server: string;
+    port: number;
+}
+
 export = class UIHost {
     private app: express.Express;
     private http: http.Server;
@@ -12,32 +19,37 @@ export = class UIHost {
 
     private controller: Controller;
 
-    constructor(controller) {
+    constructor(controller: Controller) {
         this.app = express();
         this.http = new http.Server(this.app);
         this.io = socket_io(this.http);
 
-        this.io.on("connection", (socket) => {
-            console.info('UI: a user connected');
-
-            this.registerEvents(socket);
+        this.io.on("connection", (socket: Socket) => {
+            this.handleConnection(socket);
         });
 
         this.controller = controller;
     }
 
-    registerEvents(socket) {
+    private handleConnection(socket: Socket) {
+        console.info('UIHost: a user connected');
+
         socket.on('disconnect', () => {
-            console.info('UI: a user disconnected');
+            this.handleDisconnect(socket);
         })
 
-        socket.on('connect_to_live_server', (data) => {
-            var server = data.server;
-            var port = data.port;
-
-            console.info("Asking controller for new live server connction @" + server + ":" + port);
-            this.controller.newLSConnection(server,port);
+        socket.on('connect_to_live_server', (address: LiveLinkServerAddress) => {
+            this.handleRequestConnectToLiveServer(address);
         })
+    }
+
+    private handleRequestConnectToLiveServer(address: LiveLinkServerAddress) {
+        console.info("UIHost: Asking controller for new live server connction @" + address.server + ":" + address.port);
+        this.controller.newLSConnection(address.server,address.port);
+    }
+
+    private handleDisconnect(socket: Socket) {
+        console.info('UIHost: a user disconnected');
     }
 
     serve(file_address) {
@@ -50,7 +62,7 @@ export = class UIHost {
         this.http.listen(0, () => {
             var address = this.http.address() as AddressInfo;
 
-            console.info('UI server on port ' + address.port);
+            console.info('UIHost on port ' + address.port);
         });
     }
 }

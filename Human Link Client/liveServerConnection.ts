@@ -3,12 +3,20 @@ import * as net from 'net';
 
 import Controller from './controller';
 
+interface LiveLinkData {
+    type: string;
+}
+
+interface ClientNameData extends LiveLinkData {
+    name: string;
+}
+
 export = class LiveServerConnection {
     private controller: Controller;
     private socket: net.Socket;
     private name: string;
     private server: string;
-    private port: string;
+    private port: number;
 
     constructor(controller: Controller) {
         this.controller = controller;
@@ -16,37 +24,47 @@ export = class LiveServerConnection {
         // create a socket to connect to server
         this.socket = new net.Socket();
 
-        // define error handler
-        this.socket.on("error", function(error) {
-            console.error(error);
-        });
+        // connect error handler
+        this.socket.on("error", (error) => {this.handleError(error)});
 
-        // define data handler
-        this.socket.on("data", (json: string) => {
-            console.info("Received data: " + json);
+        // connect data handler
+        this.socket.on("data", (data) => {this.handleData(data)});
 
-            var data = JSON.parse(json);
-            switch (data.type) {
-                case "clientName":
-                    if (this.name !== undefined) break; // only allow name to be set once
-
-                    this.name = data.name;
-                    console.info("Received clientName: " + data.name);
-
-                    this.controller.placeLSConnectionInList(this);
-                    break;
-            }
-        });
-
-        // define handler for closing connection
-        this.socket.on("close", () => {
-            console.info("Live Server connection closed " + this.name + "@" + this.server + ":" + this.port);
-
-            this.controller.removeLSConnectionFromList(this);
-        });
+        // connect closing handler
+        this.socket.on("close", () => {this.handleClose()});
     }
 
-    connectToLiveServer(server, port) {
+    private handleError(error: Error) {
+        console.error(error);
+    }
+
+    private handleData(jsonData: Buffer) {
+        console.info("Received data: " + jsonData);
+
+            var data: LiveLinkData = JSON.parse(jsonData.toString());
+            switch (data.type) {
+                case "clientName":
+                    this.receiveClientName(data as ClientNameData)                    
+                    break;
+            }
+    }
+
+    private receiveClientName(clientNameData: ClientNameData) {
+        if (this.name !== undefined) return; // only allow name to be set once
+
+        this.name = clientNameData.name;
+        console.info("Received clientName: " + clientNameData.name);
+
+        this.controller.placeLSConnectionInList(this);
+    }
+
+    private handleClose() {
+        console.info("Live Server connection closed " + this.name + "@" + this.server + ":" + this.port);
+
+        this.controller.removeLSConnectionFromList(this);
+    }
+
+    connectToLiveServer(server: string, port: number) {
         this.socket.connect(port, server, () => {
             console.info("Connected to Live Server " + server + ":" + port);
 
