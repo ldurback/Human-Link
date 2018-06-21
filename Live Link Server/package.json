@@ -2,7 +2,8 @@
   "name": "live-link-server",
   "version": "0.0.1",
   "description": "Live Link Server",
-  "dependencies": {
-    "log": "^1.4.0"
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^10.3.4"
   }
 }

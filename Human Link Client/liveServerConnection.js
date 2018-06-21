@@ -1,6 +1,3 @@
-var Log = require('log')
-var log = new Log('info');
-
 // load the TCP library
 var net = require('net');
 
@@ -13,25 +10,37 @@ class LiveServerConnection {
 
         // define error handler
         this.socket.on("error", function(error) {
-            log.error(error);
+            console.error(error);
         });
 
         // define data handler
-        this.socket.on("data", function(data) {
-            log.info("Received: " + data);
+        this.socket.on("data", (json) => {
+            console.info("Received data: " + json);
+
+            var data = JSON.parse(json);
+            switch (data.type) {
+                case "clientName":
+                    if (this.name !== undefined) break; // only allow name to be set once
+
+                    this.name = data.name;
+                    console.info("Received clientName: " + data.name);
+
+                    this.controller.placeLSConnectionInList(this);
+                    break;
+            }
         });
 
         // define handler for closing connection
         this.socket.on("close", () => {
-            log.info("Live Server connection closed @" + this.server + ":" + this.port);
+            console.info("Live Server connection closed " + this.name + "@" + this.server + ":" + this.port);
 
-            this.controller.liveServerConnectionClosed(this);
+            this.controller.removeLSConnectionFromList(this);
         });
     }
 
     connectToLiveServer(server, port) {
         this.socket.connect(port, server, () => {
-            log.info("Connected to Live Server " + server + ":" + port);
+            console.info("Connected to Live Server " + server + ":" + port);
 
             this.server = server;
             this.port = port;

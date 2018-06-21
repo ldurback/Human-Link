@@ -1,6 +1,3 @@
-var Log = require('log')
-var log = new Log('info');
-
 class UIHost {
     constructor(controller) {
         this.app = require('express')();
@@ -8,7 +5,7 @@ class UIHost {
         this.io = require('socket.io')(this.http);
 
         this.io.on("connection", (socket) => {
-            log.info('UI: a user connected');
+            console.info('UI: a user connected');
 
             this.registerEvents(socket);
         });
@@ -18,15 +15,15 @@ class UIHost {
 
     registerEvents(socket) {
         socket.on('disconnect', () => {
-            log.info('UI: a user disconnected');
+            console.info('UI: a user disconnected');
         })
 
         socket.on('connect_to_live_server', (data) => {
             var server = data.server;
             var port = data.port;
 
-            log.info("Asking controller for new live server connction @" + server + ":" + port);
-            this.controller.newLiveServerConnection(server,port);
+            console.info("Asking controller for new live server connction @" + server + ":" + port);
+            this.controller.newLSConnection(server,port);
         })
     }
 
@@ -38,7 +35,7 @@ class UIHost {
 
     find_port_and_listen() {
         this.http.listen(0, () => {
-            log.info('UI server on port ' + this.http.address().port);
+            console.info('UI server on port ' + this.http.address().port);
         });
     }
 }
