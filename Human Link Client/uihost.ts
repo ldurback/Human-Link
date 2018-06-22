@@ -52,7 +52,7 @@ export = class UIHost {
         console.info('UIHost: a user disconnected');
     }
 
-    serve(directory_address) {
+    serve(directory_address: string) {
         this.app.use(express.static(directory_address));
     }
 
