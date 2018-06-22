@@ -38,10 +38,10 @@ export = class LiveServerConnection {
         console.error(error);
     }
 
-    private handleData(jsonData: Buffer) {
-        console.info("Received data: " + jsonData);
+    private handleData(jsonBuffer: Buffer) {
+        console.info("Received data: " + jsonBuffer);
 
-            var data: LiveLinkData = JSON.parse(jsonData.toString());
+            var data: LiveLinkData = JSON.parse(jsonBuffer.toString());
             switch (data.type) {
                 case "clientName":
                     this.receiveClientName(data as ClientNameData)                    
