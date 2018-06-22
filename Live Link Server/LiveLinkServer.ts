@@ -34,7 +34,7 @@ export = class LiveLinkServer extends net.Server {
             socket.name = socket.remoteAddress + ":" + socket.remotePort;
 
             // put the socket in the list of clients
-            this.clients[name] = socket;
+            this.clients[socket.name] = socket;
 
             // connect the error handler for the socket
             socket.on("error", (error) => {
