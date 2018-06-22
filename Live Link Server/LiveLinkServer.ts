@@ -13,15 +13,28 @@ interface ClientNameData extends LiveLinkData {
     name: string;
 }
 
+interface AuthenticationData extends LiveLinkData {
+    // define the authentication data for your server here
+}
+
+interface MessageData extends LiveLinkData {
+    message: string;
+}
+
+interface MessageAndSenderData extends MessageData {
+    sender: string;
+}
+
 export = class LiveLinkServer extends net.Server {
-    private clients: Array<LiveLinkSocket> = [];
+    private clients: {[name: string]: LiveLinkSocket} = {};
+    private owner: LiveLinkSocket;
     constructor() {
         super((socket: LiveLinkSocket) => {
             // Give a name to the client
             socket.name = socket.remoteAddress + ":" + socket.remotePort;
 
             // put the socket in the list of clients
-            this.clients.push(socket);
+            this.clients[name] = socket;
 
             // connect the error handler for the socket
             socket.on("error", (error) => {
@@ -55,12 +68,42 @@ export = class LiveLinkServer extends net.Server {
         console.error(socket.name + ": " + error);
     }
 
-    private handleData(socket: LiveLinkSocket, data: Buffer) {
+    private handleData(socket: LiveLinkSocket, jsonBuffer: Buffer) {
+        console.info("Received data: ", jsonBuffer);
+        var data: LiveLinkData = JSON.parse(jsonBuffer.toString()) as LiveLinkData;
+        switch (data.type) {
+            case "authentication":
+                this.handleAuthentication(socket, data as AuthenticationData);
+                break;
+            case "messageToOwner":
+                this.handleMessageToOwner(socket, data as MessageData);
+                break;
+        }
+    }
 
+    private handleAuthentication(socket: LiveLinkSocket, authenticationData: AuthenticationData) {
+        console.warn("WARNING: No Authentication Method in Place.  Owner was just asigned.")
+        this.owner = socket;
+    }
+
+    private handleMessageToOwner(socket: LiveLinkSocket, messageToOwner: MessageData) {
+        if (this.owner === undefined) {
+            console.info("Tried to send a message to the owner, but there was no owner: ", messageToOwner);
+            return;
+        }
+
+        // construct message to send to owner
+        var message: MessageAndSenderData = {
+            type: "messageAndSenderData",
+            message: messageToOwner.message,
+            sender: socket.name
+        };
+
+        this.owner.write(JSON.stringify(message));
     }
 
     private handleClose(socket: LiveLinkSocket) {
-        this.clients.splice(this.clients.indexOf(socket),1);
+        delete this.clients[socket.name];
 
         console.info(socket.name + " has left");
     }
