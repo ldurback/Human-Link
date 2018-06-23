@@ -8,7 +8,6 @@ export = class LiveServerClientConnection implements LiveServerConnection {
     private controller: Controller;
     private socket: net.Socket;
 
-    name: string;
     server: string;
     port: number;
 
@@ -42,7 +41,7 @@ export = class LiveServerClientConnection implements LiveServerConnection {
     }
 
     private handleClose() {
-        console.info("Live Server connection closed " + this.name + "@" + this.server + ":" + this.port);
+        console.info("Live Server connection closed @" + this.server + ":" + this.port);
 
         this.controller.removeLSClientConnectionFromList(this);
     }

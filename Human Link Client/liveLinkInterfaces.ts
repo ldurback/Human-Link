@@ -1,7 +1,6 @@
 import { AuthenticationData } from "./AuthenticationData";
 
 export interface LiveServerConnection {
-    name: string;
     server: string;
     port: number;
 
