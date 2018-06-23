@@ -49,8 +49,8 @@ export = class UIHost {
             this.handleRequestConnectToLiveServerAsClient(address);
         })
 
-        socket.on('connect_to_own_live_server', (request: LogInLiveLinkServerRequest) => {
-            this.handleRequestConnectToOwnLiveServer(request);
+        socket.on('connect_to_live_server_as_owner', (request: LogInLiveLinkServerRequest) => {
+            this.handleRequestConnectToLiveServerAsOwner(request);
         })
     }
 
@@ -59,7 +59,7 @@ export = class UIHost {
         this.controller.newLSClientConnection(address.server,address.port);
     }
 
-    private handleRequestConnectToOwnLiveServer(request: LogInLiveLinkServerRequest) {
+    private handleRequestConnectToLiveServerAsOwner(request: LogInLiveLinkServerRequest) {
         console.info("UIHost: Asking controller to log into own live link server @" + request.address.server + ":" + request.address.port);
         this.controller.connectToOwnLS(request.address.server, request.address.port, request.authenticationData);
     }
