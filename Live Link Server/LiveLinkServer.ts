@@ -11,11 +11,6 @@ interface LiveLinkData {
     type: string;
 }
 
-// type: clientName
-interface ClientNameData extends LiveLinkData {
-    name: string;
-}
-
 // type: authentication
 interface LiveLinkAuthenticationData extends LiveLinkData, AuthenticationData {}
 
