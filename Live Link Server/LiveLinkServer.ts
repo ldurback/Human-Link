@@ -1,6 +1,8 @@
 // load the TCP Library
 import * as net from "net";
 
+import { AuthenticationData } from "./AuthenticationData";
+
 interface LiveLinkSocket extends net.Socket {
     name: string;
 }
@@ -13,9 +15,7 @@ interface ClientNameData extends LiveLinkData {
     name: string;
 }
 
-interface AuthenticationData extends LiveLinkData {
-    // define the authentication data for your server here
-}
+interface LiveLinkAuthenticationData extends LiveLinkData, AuthenticationData {}
 
 interface MessageData extends LiveLinkData {
     message: string;
@@ -73,7 +73,7 @@ export = class LiveLinkServer extends net.Server {
         var data: LiveLinkData = JSON.parse(jsonBuffer.toString()) as LiveLinkData;
         switch (data.type) {
             case "authentication":
-                this.handleAuthentication(socket, data as AuthenticationData);
+                this.handleAuthentication(socket, data as LiveLinkAuthenticationData);
                 break;
             case "messageToOwner":
                 this.handleMessageToOwner(socket, data as MessageData);
@@ -81,7 +81,7 @@ export = class LiveLinkServer extends net.Server {
         }
     }
 
-    private handleAuthentication(socket: LiveLinkSocket, authenticationData: AuthenticationData) {
+    private handleAuthentication(socket: LiveLinkSocket, liveLinkAuthData: LiveLinkAuthenticationData) {
         console.warn("WARNING: No Authentication Method in Place.  Owner was just asigned.")
         this.owner = socket;
     }
