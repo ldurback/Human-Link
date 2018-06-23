@@ -1,8 +1,8 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom'
-import ConnectDialog from './components/connectDialog';
+import ConnectAsOwnerDialog from './components/connectAsOwnerDialog';
 
 ReactDOM.render(
-  <ConnectDialog />,
+  <ConnectAsOwnerDialog />,
   document.getElementById('root')
 );
