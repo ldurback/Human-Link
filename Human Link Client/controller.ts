@@ -7,7 +7,7 @@ import { AuthenticationData } from './AuthenticationData';
 export = class Controller {
     uiHost: UIHost;
     private liveServerClientConnections: Array<LiveServerClientConnection>;
-    private myLiveServer: LiveServerOwnConnection;
+    private myLiveServerConnection: LiveServerOwnConnection;
 
     constructor() {
         this.uiHost = new UIHost(this);
@@ -26,14 +26,14 @@ export = class Controller {
     }
 
     connectToOwnLS(server: string, port: number, authenticationData: AuthenticationData) {
-        this.myLiveServer = new LiveServerOwnConnection(this);
+        this.myLiveServerConnection = new LiveServerOwnConnection(this);
         
-        this.myLiveServer.connectToLiveServer(server, port);
+        this.myLiveServerConnection.connectToLiveServer(server, port);
 
-        // todo: authenticate
+        this.myLiveServerConnection.authenticateWithLiveServer(authenticationData);
     }
 
     deleteOwnLS() {
-        delete this.myLiveServer;
+        delete this.myLiveServerConnection;
     }
 }

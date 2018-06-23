@@ -11,10 +11,12 @@ interface LiveLinkData {
     type: string;
 }
 
+// type: clientName
 interface ClientNameData extends LiveLinkData {
     name: string;
 }
 
+// type: authentication
 interface LiveLinkAuthenticationData extends LiveLinkData, AuthenticationData {}
 
 interface MessageData extends LiveLinkData {
@@ -51,14 +53,6 @@ export = class LiveLinkServer extends net.Server {
                 this.handleClose(socket);
             });
 
-            // construct identification message
-            var idMessage: ClientNameData = {
-                type: "clientName",
-                name: socket.name
-            };
-            var jsonIDMessage = JSON.stringify(idMessage);
-            socket.write(jsonIDMessage);
-
             // log that client has joined
             console.info(socket.name + " has joined");
         });
@@ -69,8 +63,8 @@ export = class LiveLinkServer extends net.Server {
     }
 
     private handleData(socket: LiveLinkSocket, jsonBuffer: Buffer) {
-        console.info("Received data: ", jsonBuffer);
         var data: LiveLinkData = JSON.parse(jsonBuffer.toString()) as LiveLinkData;
+        console.info("Received data: ", data);
         switch (data.type) {
             case "authentication":
                 this.handleAuthentication(socket, data as LiveLinkAuthenticationData);

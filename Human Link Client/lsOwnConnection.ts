@@ -2,7 +2,8 @@
 import * as net from 'net';
 
 import Controller from './controller';
-import { LiveServerConnection, LiveLinkData, ClientNameData } from './liveLinkInterfaces';
+import { LiveServerConnection, LiveLinkData, ClientNameData, LiveLinkAuthenticationData } from './liveLinkInterfaces';
+import { AuthenticationData } from './AuthenticationData';
 
 export = class LiveServerOwnConnection implements LiveServerConnection {
     private controller: Controller;
@@ -37,17 +38,8 @@ export = class LiveServerOwnConnection implements LiveServerConnection {
 
             var data: LiveLinkData = JSON.parse(jsonBuffer.toString());
             switch (data.type) {
-                case "clientName":
-                    this.receiveClientName(data as ClientNameData)                    
-                    break;
+
             }
-    }
-
-    private receiveClientName(clientNameData: ClientNameData) {
-        if (this.name !== undefined) return; // only allow name to be set once
-
-        this.name = clientNameData.name;
-        console.info("Received clientName: " + clientNameData.name);
     }
 
     private handleClose() {
@@ -63,5 +55,13 @@ export = class LiveServerOwnConnection implements LiveServerConnection {
             this.server = server;
             this.port = port;
         });
+    }
+
+    authenticateWithLiveServer(authenticationData: AuthenticationData) {
+        var llAuthData: LiveLinkAuthenticationData = {
+            type: "authentication"
+        };
+
+        this.socket.write(JSON.stringify(llAuthData));
     }
 }
