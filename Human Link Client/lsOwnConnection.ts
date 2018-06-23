@@ -2,21 +2,15 @@
 import * as net from 'net';
 
 import Controller from './controller';
+import { LiveServerConnection, LiveLinkData, ClientNameData } from './liveLinkInterfaces';
 
-interface LiveLinkData {
-    type: string;
-}
-
-interface ClientNameData extends LiveLinkData {
-    name: string;
-}
-
-export = class LiveServerConnection {
+export = class LiveServerOwnConnection implements LiveServerConnection {
     private controller: Controller;
     private socket: net.Socket;
-    private name: string;
-    private server: string;
-    private port: number;
+
+    name: string;
+    server: string;
+    port: number;
 
     constructor(controller: Controller) {
         this.controller = controller;
@@ -54,14 +48,12 @@ export = class LiveServerConnection {
 
         this.name = clientNameData.name;
         console.info("Received clientName: " + clientNameData.name);
-
-        this.controller.placeLSConnectionInList(this);
     }
 
     private handleClose() {
         console.info("Live Server connection closed " + this.name + "@" + this.server + ":" + this.port);
 
-        this.controller.removeLSConnectionFromList(this);
+        this.controller.deleteOwnLS();
     }
 
     connectToLiveServer(server: string, port: number) {

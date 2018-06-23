@@ -7,9 +7,16 @@ import { AddressInfo } from "net";
 
 import { Socket } from "socket.io";
 
+import { AuthenticationData } from "./AuthenticationData";
+
 interface LiveLinkServerAddress {
     server: string;
     port: number;
+}
+
+interface LogInLiveLinkServerRequest {
+    address: LiveLinkServerAddress;
+    authenticationData: AuthenticationData;
 }
 
 export = class UIHost {
@@ -35,20 +42,29 @@ export = class UIHost {
         console.info('UIHost: a user connected');
 
         socket.on('disconnect', () => {
-            this.handleDisconnect(socket);
+            this.handleDisconnect();
         })
 
         socket.on('connect_to_live_server', (address: LiveLinkServerAddress) => {
-            this.handleRequestConnectToLiveServer(address);
+            this.handleRequestConnectToLiveServerAsClient(address);
+        })
+
+        socket.on('connect_to_own_live_server', (request: LogInLiveLinkServerRequest) => {
+            this.handleRequestConnectToOwnLiveServer(request);
         })
     }
 
-    private handleRequestConnectToLiveServer(address: LiveLinkServerAddress) {
+    private handleRequestConnectToLiveServerAsClient(address: LiveLinkServerAddress) {
         console.info("UIHost: Asking controller for new live server connction @" + address.server + ":" + address.port);
-        this.controller.newLSConnection(address.server,address.port);
+        this.controller.newLSClientConnection(address.server,address.port);
     }
 
-    private handleDisconnect(socket: Socket) {
+    private handleRequestConnectToOwnLiveServer(request: LogInLiveLinkServerRequest) {
+        console.info("UIHost: Asking controller to log into own live link server @" + request.address.server + ":" + request.address.port);
+        this.controller.connectToOwnLS(request.address.server, request.address.port, request.authenticationData);
+    }
+
+    private handleDisconnect() {
         console.info('UIHost: a user disconnected');
     }
 
