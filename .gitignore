@@ -16517,3 +16517,13 @@ UI/node_modules/yargs-parser/LICENSE.txt
 UI/node_modules/yargs-parser/README.md
 UI/node_modules/yargs-parser/package.json
 UI/node_modules/yargs-parser/lib/tokenize-arg-string.js
+Human Link Client/lsOwnConnection.js
+Human Link Client/AuthenticationData.js
+Human Link Client/AuthenticationData.js.map
+Human Link Client/liveLinkInterfaces.js
+Human Link Client/liveLinkInterfaces.js.map
+Human Link Client/lsClientConnection.js
+Human Link Client/lsClientConnection.js.map
+Human Link Client/lsOwnConnection.js.map
+Live Link Server/AuthenticationData.js.map
+Live Link Server/AuthenticationData.js

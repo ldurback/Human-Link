@@ -45,7 +45,7 @@ export = class UIHost {
             this.handleDisconnect();
         })
 
-        socket.on('connect_to_live_server', (address: LiveLinkServerAddress) => {
+        socket.on('connect_to_live_server_as_client', (address: LiveLinkServerAddress) => {
             this.handleRequestConnectToLiveServerAsClient(address);
         })
 
