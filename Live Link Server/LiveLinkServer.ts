@@ -59,7 +59,7 @@ export = class LiveLinkServer extends net.Server {
 
     private handleData(socket: LiveLinkSocket, jsonBuffer: Buffer) {
         var data: LiveLinkData = JSON.parse(jsonBuffer.toString()) as LiveLinkData;
-        console.info("Received data: ", data);
+        console.info("Received data");
         switch (data.type) {
             case "authentication":
                 this.handleAuthentication(socket, data as LiveLinkAuthenticationData);
