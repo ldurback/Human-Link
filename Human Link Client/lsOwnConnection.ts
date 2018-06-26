@@ -2,7 +2,7 @@
 import * as net from 'net';
 
 import Controller from './controller';
-import { LiveServerConnection, LiveLinkData, ClientNameData, LiveLinkAuthenticationData } from './liveLinkInterfaces';
+import { LiveServerConnection, LiveLinkData, LiveLinkAuthenticationData } from './liveLinkInterfaces';
 import { AuthenticationData } from './AuthenticationData';
 
 export = class LiveServerOwnConnection implements LiveServerConnection {
